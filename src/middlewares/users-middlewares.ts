@@ -5,32 +5,38 @@ import joi from "joi";
 const userMiddlewares = {
     create: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { email, name, password, checkpassword } = req.body;
-            const response = await user.findOne({ email });
-            if (response) {
-                res.status(400).json({ message: "Email já cadastrado no sistema" });
-            }
-            if (password !== checkpassword) {
-                res.status(400).json({ message: "Senhas não conferem" });
-            }
+            const { email, password, checkpassword } = req.body;
             const schema = joi.object({
                 email: joi.string().email().required(),
                 name: joi.string().min(3).required(),
                 password: joi.string().min(6).required(),
                 checkpassword: joi.ref("password"),
             });
-
-            const { error } = schema.validate(req.body);
-            if (error) {
-                res.status(400).json({ message: error.details[0].message });
+            
+            const validationResult = schema.validate(req.body);
+            if (validationResult.error) {
+                return res.status(400).send({ message: validationResult.error.details[0].message });
             }
+            
+            const existingUser = await user.findOne({ email }); 
+            if (existingUser) {
+                return res.status(400).send({ message: "Email já cadastrado no sistema" });
+            }
+
+            if (!password) {
+                return res.status(400).send({ message: "Senha é obrigatória." });
+            }
+
+            if (password !== checkpassword) {
+                return res.status(400).send({ message: "Senhas não conferem" });
+            }
+
             next();
         } catch (error) {
-            res.status(500).json({ error, message: "Erro ao criar usuário" });
-            console.log("Erro middleware usuário\n" + error);
+            console.error("Erro middleware usuário\n" + error);
+            return res.status(500).send({ error, message: "Erro ao criar usuário" });
         }
     },
 }
-
 
 export default userMiddlewares;

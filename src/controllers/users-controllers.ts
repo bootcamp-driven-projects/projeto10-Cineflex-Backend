@@ -5,7 +5,7 @@ import userMiddlewares from "@/middlewares/users-middlewares";
 
 const userController = {
     create: async (req: Request, res: Response, next: NextFunction) => {
-        if (res.headersSent) { // Verifica se uma resposta já foi enviada
+        if (res.headersSent) { 
             return;
         }
         try {

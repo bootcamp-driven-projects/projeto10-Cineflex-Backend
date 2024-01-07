@@ -5,7 +5,7 @@ import joi from "joi";
 const userMiddlewares = {
     create: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { email, password, checkpassword } = req.body;
+            const { email, name, password, checkpassword } = req.body;
             const response = await user.findOne({ email });
             if (response) {
                 res.status(400).json({ message: "Email já cadastrado no sistema" });
@@ -15,6 +15,7 @@ const userMiddlewares = {
             }
             const schema = joi.object({
                 email: joi.string().email().required(),
+                name: joi.string().min(3).required(),
                 password: joi.string().min(6).required(),
                 checkpassword: joi.ref("password"),
             });

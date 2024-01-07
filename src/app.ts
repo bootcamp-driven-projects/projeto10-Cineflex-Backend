@@ -2,6 +2,7 @@ import express, { Express } from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import router from "./routes";
 
 dotenv.config();
 
@@ -12,6 +13,7 @@ dotenv.config();
 
 const app = express();
 app.use(cors()).use(express.json());
+app.use(router);
 
 async function connectDb() {
   try {

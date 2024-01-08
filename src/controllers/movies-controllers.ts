@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Day } from "@/models/movies";  // Ajuste o caminho conforme necessário
+import { Day } from "@/models/movies";
 import dayjs from "dayjs";
 
 interface PopulatedShowTime {
@@ -23,7 +23,7 @@ interface PopulatedShowTime {
 }
 
 interface PopulatedDay {
-  date: number;  // Alterado de Date para number para corresponder ao Unix Timestamp
+  date: number;
   weekday: string;
   showTimeIds: PopulatedShowTime[];
 }
@@ -31,7 +31,7 @@ interface PopulatedDay {
 const moviesControllers = {
   listbydate: async (req: Request, res: Response) => {
     try {
-      const dateString = req.body.date ? req.body.date.toString() : dayjs().format('YYYY-MM-DD');
+      const dateString = req.query.date ? req.query.date.toString() : dayjs().format('YYYY-MM-DD');
       const startOfDay = dayjs(dateString).startOf('day').valueOf(); 
       const endOfDay = dayjs(dateString).endOf('day').valueOf(); 
 

@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 import { signInSchema } from "@/schemas/users-schemas";
 
 const userMiddlewares = {
-    create: async (req: Request, res: Response, next: NextFunction) => {
+    register: async (req: Request, res: Response) => {
         try {
             const { email, password, checkpassword } = req.body;
             const schema = joi.object({
@@ -33,7 +33,6 @@ const userMiddlewares = {
                 return res.status(400).send({ message: "Senhas não conferem" });
             }
 
-            next();
         } catch (error) {
             console.error("Erro middleware usuário\n" + error);
             return res.status(500).send({ error, message: "Erro ao criar usuário" });

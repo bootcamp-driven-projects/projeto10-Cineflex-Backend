@@ -6,12 +6,12 @@ import { v4 as uuid } from "uuid";
 import userMiddlewares from "@/middlewares/users-middlewares";
 
 const userController = {
-    create: async (req: Request, res: Response, next: NextFunction) => {
+    register: async (req: Request, res: Response) => {
         if (res.headersSent) { 
             return;
         }
         try {
-            await userMiddlewares.create(req, res, next);
+            await userMiddlewares.register(req, res);
             if (res.headersSent) {
                 return;
             }
